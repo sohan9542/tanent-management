@@ -1,148 +1,128 @@
-# Tenant Management System - Milestone 2
+# Tanent — Multi-Tenant Property Management
 
-A Next.js application for tenant and ticket management with Supabase backend, featuring guided defect reporting, AI-assisted follow-ups, and role-based ticket visibility.
+A Next.js portfolio app for tenant defect reporting, ticket workflows, and role-based organization / platform administration. Built with Supabase for production-style auth and data, plus a **static demo mode** that runs without a database.
+
+**Live demo:** [https://tanent-fx9d.vercel.app](https://tanent-fx9d.vercel.app)  
+**Author:** [Sohanur Rahman](https://github.com/sohan9542) (`sohan9542`)
 
 ## Demo login (static — no database)
 
-Works even when Supabase is down. No seeding required.
+Works even when Supabase is unavailable. No seeding required. reCAPTCHA is bypassed for this portfolio demo.
 
 | Page | Credentials | Action |
 |------|-------------|--------|
-| `/login` | Tenant ID `DEMO-001` · Last Name `Demo` | **Fill demo** → Sign in |
-| `/org/login` | `org-demo@tanent.app` / `Demo123!` | **Fill demo** → Sign in |
-| `/platform/login` | `demo@tanent.app` / `Demo123!` | **Fill demo** → Sign in |
+| [`/login`](https://tanent-fx9d.vercel.app/login) | Tenant ID `DEMO-001` · Last Name `Demo` | **Fill demo** → Sign in |
+| [`/org/login`](https://tanent-fx9d.vercel.app/org/login) | `org-demo@tanent.app` / `Demo123!` | **Fill demo** → Sign in |
+| [`/platform/login`](https://tanent-fx9d.vercel.app/platform/login) | `demo@tanent.app` / `Demo123!` | **Fill demo** → Sign in |
 
-Static cookie session — no database. reCAPTCHA is always bypassed on tenant login.
+Static cookie session (`tanent_static_demo`) with signed tokens. Platform admin demo views use in-memory sample orgs, objects, users, tenants, and tickets from `lib/demo-config.js`.
 
-## Features (Milestone 2)
+## Features
 
-- **Guided Defect Reporting Wizard**: Multi-step form for tenants to report defects with category, location, description, urgency, and image uploads
-- **AI-Assisted Follow-ups**: OpenAI-powered questions to improve data quality (gracefully degrades if API key not provided)
-- **Pre-Ticket System**: Thread-based clarification system before finalizing tickets
-- **Image Upload**: Support for up to 5 images per ticket/pre-ticket (max 5MB each, JPG/PNG/WebP)
-- **Object-Based Role System**: Organization-scoped, object-based roles (owner/technical/warranty per object)
-- **Platform Admin**: Full platform management (organizations, objects, users)
-- **Organization Admin**: Manage organization users and assign object roles
-- **Role-Based Ticket Visibility**: Staff see tickets based on their object roles and organization assignments
-- **Dual Login System**: Separate login for platform admins (`/platform/login`) and organization users (`/org/login`)
+- **Tenant portal** — login by tenant ID + last name; dashboard, tickets, guided defect reporting
+- **Guided defect wizard** — category, location, description, urgency, image uploads (up to 5 images, 5MB each)
+- **AI-assisted follow-ups** — optional OpenAI questions to improve report quality (graceful when `OPENAI_API_KEY` is unset)
+- **Pre-tickets** — clarification thread before finalizing a ticket
+- **Platform admin** — organizations, objects (buildings), users, tenants, tickets, branding, locations
+- **Organization admin** — org-scoped users, object roles, tickets, craftsmen
+- **Object-based roles** — owner / technical / warranty assignments per object
+- **Capmo integration** — optional ticket handoff / polling when Capmo env vars are set
+- **Email notifications** — optional via Resend
 
-## Setup
+## Tech stack
 
-1. Install dependencies:
+| Layer | Choice |
+|-------|--------|
+| Framework | Next.js 14 (App Router) |
+| UI | React 18, Tailwind CSS |
+| Backend | Next.js Route Handlers |
+| Database / Auth | Supabase (Postgres, Auth, Storage) |
+| Email | Resend |
+| AI | OpenAI (optional) |
+| Integrations | Capmo API (optional) |
+| Hosting (demo) | Vercel |
+
+## Architecture
+
+```
+app/                  App Router pages + API routes
+  login/              Tenant login (+ demo credentials panel)
+  org/                Organization portal
+  platform/           Platform admin portal
+  admin/              Legacy admin UI (still present)
+  api/                REST-style route handlers
+  report-defect/      Multi-step defect wizard
+lib/                  Shared server logic
+  demo-config.js      Static demo credentials + sample data
+  demo-token.js       Signed static demo session tokens
+  demo-session.js     Cookie read helpers for demo sessions
+  auth/               Tenant / admin session helpers
+  supabase/           Browser + service-role clients
+  integrations/capmo/ Capmo client, mapping, poll
+  utils/              Validation, Excel/CSV import parsing
+supabase/migrations/  SQL schema + RLS migrations
+scripts/              One-off admin / hash helpers
+tests/                Unit tests (demo session + validation)
+```
+
+**Auth model (high level):**
+
+1. **Static demo** — credential match → HMAC-signed cookie → in-app sample data (no Supabase calls)
+2. **Tenant** — last-name hash verify + DB session cookie (when Supabase is configured)
+3. **Platform / org** — Supabase Auth + `platform_users` / memberships (when configured)
+
+## Local setup
+
 ```bash
+git clone https://github.com/sohan9542/tanent-management.git
+cd tanent-management
 npm install
-```
-
-2. Copy `.env.example` to `.env.local` and fill in your values:
-```bash
 cp .env.example .env.local
-```
-
-3. Run database migrations in Supabase SQL Editor (in order):
-   - Run `supabase/migrations/001_schema.sql`
-   - Run `supabase/migrations/002_rls_policies.sql`
-   - Run `supabase/migrations/003_admin_sessions.sql`
-   - Run `supabase/migrations/004_milestone2_schema.sql`
-   - Run `supabase/migrations/005_milestone2_rls.sql`
-   - Run `supabase/migrations/006_correct_role_system.sql` (Object-based role system)
-   - Run `supabase/migrations/007_correct_rls.sql` (RLS for new tables)
-   - Run `supabase/migrations/008_finalize_role_system.sql` (Finalize migration)
-
-4. Set up Supabase Storage:
-   - **See detailed instructions in `SUPABASE_STORAGE_SETUP.md`**
-   - Quick setup: Go to Supabase Dashboard → Storage → Create bucket named `ticket-images` → Set to **Public**
-
-5. Set up Authentication:
-   - **See detailed instructions in `AUTHENTICATION_SYSTEM.md`**
-   - Create platform admin user in Supabase Auth
-   - Create `platform_users` record linking to Supabase Auth user
-   - Login at `/platform/login` for platform admins or `/org/login` for organization users
-
-6. Start the development server:
-```bash
 npm run dev
 ```
 
-## Environment Variables
+Open [http://localhost:3000/login](http://localhost:3000/login) and use the demo credentials above. Demo login works with empty Supabase env vars.
 
-Required environment variables (add to `.env.local`):
+### Full stack (optional)
 
-```env
-# Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+To use real Supabase auth/data instead of (or alongside) the static demo:
 
-# OpenAI Configuration (Optional - system works without it)
-OPENAI_API_KEY=your_openai_api_key
-```
+1. Create a Supabase project and fill `.env.local` from `.env.example`
+2. Run SQL migrations in order under `supabase/migrations/`
+3. Create a public Storage bucket `ticket-images` for uploads
+4. Create platform users via Supabase Auth + `platform_users` (see `scripts/create-platform-user.js`)
 
-### Environment Variable Details
+## Environment variables
 
-- **NEXT_PUBLIC_SUPABASE_URL**: Your Supabase project URL (found in Project Settings → API)
-- **NEXT_PUBLIC_SUPABASE_ANON_KEY**: Your Supabase anonymous/public key (found in Project Settings → API)
-- **SUPABASE_SERVICE_ROLE_KEY**: Your Supabase service role key (found in Project Settings → API, keep this secret!)
-- **OPENAI_API_KEY**: (Optional) Your OpenAI API key for AI-assisted follow-up questions. If not provided, the system will work without AI features.
+See [`.env.example`](.env.example) for names only. Highlights:
 
-## Project Structure
+| Variable | Required for | Notes |
+|----------|--------------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Real backend | Project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Real backend | Anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Real backend | Server-only; never expose to the client |
+| `SESSION_SECRET` | Demo + sessions | Signs static demo cookies |
+| `OPENAI_API_KEY` | AI follow-ups | Optional |
+| `CAPMO_API_KEY` / `CAPMO_WEBHOOK_SECRET` / `CRON_SECRET` | Capmo | Optional |
+| `RESEND_API_KEY` / `RESEND_FROM_EMAIL` | Email | Optional |
 
-- `app/` - Next.js App Router pages and API routes
-  - `report-defect/` - Multi-step defect reporting wizard
-  - `pre-tickets/[id]/` - Pre-ticket thread view
-  - `admin/tickets/` - Admin ticket management pages
-  - `api/ai/followups/` - OpenAI API endpoint
-  - `api/pre-tickets/` - Pre-ticket CRUD endpoints
-- `lib/` - Utility functions and Supabase clients
-  - `storage.js` - Image upload utilities
-  - `staff-auth.js` - Staff authentication and role-based access
-- `components/` - React components
-- `supabase/migrations/` - Database migration files
+## Scripts
 
-## Database Schema
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm start` | Serve production build |
+| `npm run lint` | ESLint (Next.js) |
+| `npm run format` | Prettier write |
+| `npm test` | Unit tests (`node --test`) |
 
-### New Tables (Milestone 2)
-- `buildings` - Building/object information with organization assignments
-- `organizations` - Owner/Technical/Warranty organizations
-- `staff_users` - Staff users linked to Supabase Auth
-- `user_roles` - Many-to-many relationship for staff roles
-- `pre_tickets` - Pre-ticket records before finalization
-- `pre_ticket_messages` - Message thread for pre-tickets
+## CI
 
-### Updated Tables
-- `tickets` - Enhanced with category, urgency, images, AI data, building_id
-- `tenants` - Added building_id reference
-
-## Usage
-
-### For Tenants
-1. Log in with tenant ID and last name
-2. Navigate to "Report a Defect" from the dashboard
-3. Complete the multi-step wizard:
-   - Select defect category
-   - Enter location details (optional)
-   - Describe the issue (AI follow-ups may appear)
-   - Set urgency level
-   - Review and submit
-4. View pre-ticket thread, add messages/clarifications
-5. Finalize pre-ticket to create actual ticket
-
-### For Staff/Admins
-1. Log in with admin credentials (or Supabase Auth for staff)
-2. Navigate to Tickets section
-3. View tickets filtered by building assignments based on roles
-4. View ticket details including images, messages, and tenant info
-
-## Rate Limiting
-
-The AI follow-ups endpoint includes rate limiting to prevent abuse. Rate limits are applied per IP address.
-
-## Storage
-
-Images are stored in Supabase Storage bucket `ticket-images`. Make sure the bucket is configured with appropriate CORS and access policies.
+GitHub Actions (`.github/workflows/ci.yml`) runs on pushes and PRs to `main`: `npm ci` → lint → test → build.
 
 ## Notes
 
-- AI features gracefully degrade if `OPENAI_API_KEY` is not provided
-- Staff authentication uses Supabase Auth (implementation can be extended)
-- Role-based access is enforced at the application layer
-- All image uploads are validated server-side
+- This is a **portfolio / demo** project. The live Vercel deployment is intentionally configured for static demo login.
+- Typo in the product name (`tanent`) is historical and kept for existing URLs/cookies.
+- Do not commit `.env.local` or real API keys.

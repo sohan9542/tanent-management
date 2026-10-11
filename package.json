@@ -1,12 +1,16 @@
 {
-  "name": "tanent",
+  "name": "tanent-management",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "node --test tests/**/*.test.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.1.0",
@@ -30,8 +34,11 @@
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "eslint-config-prettier": "^10.1.8",
     "postcss": "^8",
+    "prettier": "^3.9.10",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
-  }
+  },
+  "description": "Multi-tenant property management — defect reporting, tickets, and role-based org/platform admin. Next.js + Supabase portfolio demo."
 }

@@ -1,0 +1,7 @@
+node_modules
+.next
+out
+coverage
+package-lock.json
+*.md
+supabase/migrations

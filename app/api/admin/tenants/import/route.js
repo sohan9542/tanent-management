@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/server'
-import { parseTenantFile, normalizeRow } from '@/utils/excel-parser'
+import { parseTenantFile, normalizeRow } from '@/lib/utils/excel-parser'
 import { hashLastName } from '@/lib/auth/verify'
-import { validateTenant } from '@/utils/validation'
+import { validateTenant } from '@/lib/utils/validation'
 import { requireAdminAuth } from '@/lib/middleware-admin'
 
 export async function POST(request) {

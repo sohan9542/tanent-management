@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/server'
 import { hashLastName } from '@/lib/auth/verify'
-import { validateTenant } from '@/utils/validation'
+import { validateTenant } from '@/lib/utils/validation'
 import { requirePlatformAdmin } from '@/lib/platform-auth'
 
 export async function GET(request, { params }) {

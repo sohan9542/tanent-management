@@ -2,6 +2,15 @@
   "extends": ["next/core-web-vitals", "prettier"],
   "rules": {
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
-    "no-console": ["warn", { "allow": ["warn", "error"] }]
-  }
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "@next/next/no-img-element": "off"
+  },
+  "overrides": [
+    {
+      "files": ["scripts/**/*.js"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
 }

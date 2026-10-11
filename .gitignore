@@ -18,6 +18,11 @@
 # misc
 .DS_Store
 *.pem
+*.zip
+
+# editor / local
+.idea
+.vscode
 
 # debug
 npm-debug.log*

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { getCurrentTenant } from '@/lib/middleware'
 import { supabaseAdmin } from '@/lib/supabase/server'
 import { sendTicketCreatedEmails } from '@/lib/email/notifications'
-import { validateImageFile, uploadImage, MAX_FILES } from '@/lib/storage'
 
 /**
  * GET /api/pre-tickets/[id] - Get a specific pre-ticket
@@ -158,7 +157,7 @@ export async function PUT(request, { params }) {
         pre_ticket_id: preTicket.id
       }
 
-      console.log('Creating ticket with data:', {
+      console.warn('Creating ticket with data:', {
         tenant_id: ticketData.tenant_id,
         category: ticketData.category,
         status: ticketData.status
@@ -175,7 +174,7 @@ export async function PUT(request, { params }) {
         throw ticketError
       }
 
-      console.log('Ticket created successfully:', ticket.id)
+      console.warn('Ticket created successfully:', ticket.id)
 
       const { data: object } = await supabaseAdmin
         .from('objects')

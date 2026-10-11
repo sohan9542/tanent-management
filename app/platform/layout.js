@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation'
 import { getCurrentPlatformUser } from '@/lib/platform-auth'
 import Link from 'next/link'
 import GoogleTranslateToggle from '@/app/components/google-translate-toggle'

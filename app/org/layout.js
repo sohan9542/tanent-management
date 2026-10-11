@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation'
 import { getCurrentStaffUser } from '@/lib/staff-auth'
 import Link from 'next/link'
 import GoogleTranslateToggle from '@/app/components/google-translate-toggle'

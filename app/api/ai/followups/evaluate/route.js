@@ -202,7 +202,7 @@ export async function POST(request) {
     // Step 1: Deterministic checks (bad words, gibberish)
     const deterministicResult = deterministicCheck(lastAnswer)
     if (deterministicResult) {
-      console.log(`[API] Deterministic rejection: "${lastAnswer.substring(0, 50)}..." - Reason: ${deterministicResult.reason}`)
+      console.warn(`[API] Deterministic rejection: "${lastAnswer.substring(0, 50)}..." - Reason: ${deterministicResult.reason}`)
       return NextResponse.json({
         isSufficient: false,
         reason: deterministicResult.reason,
@@ -219,7 +219,7 @@ export async function POST(request) {
       answer: lastAnswer
     })
     
-    console.log(`[API] AI judge result: "${lastAnswer.substring(0, 50)}..." - Sufficient: ${aiResult.isSufficient}, Reason: ${aiResult.reason}`)
+    console.warn(`[API] AI judge result: "${lastAnswer.substring(0, 50)}..." - Sufficient: ${aiResult.isSufficient}, Reason: ${aiResult.reason}`)
     
     return NextResponse.json({
       isSufficient: aiResult.isSufficient,

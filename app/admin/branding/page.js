@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { requireAdminAuth } from '@/lib/middleware-admin'
 import { getCurrentPlatformUser } from '@/lib/platform-auth'
-import { supabaseAdmin } from '@/lib/supabase/server'
 import Link from 'next/link'
 import BrandingManager from './BrandingManager'
 

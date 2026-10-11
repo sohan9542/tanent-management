@@ -66,7 +66,7 @@ export async function POST(request) {
 
       const result = evaluateAnswer(lastAnswer, questionType)
       
-      console.log(`[API] Legacy route - Evaluating answer: "${lastAnswer.substring(0, 50)}..." - Type: ${questionType}, Sufficient: ${result.isSufficient}`)
+      console.warn(`[API] Legacy route - Evaluating answer: "${lastAnswer.substring(0, 50)}..." - Type: ${questionType}, Sufficient: ${result.isSufficient}`)
       
       return NextResponse.json({
         isSufficient: result.isSufficient,

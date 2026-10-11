@@ -131,7 +131,7 @@ export default function ReportDefectPage() {
       })
       const data = await response.json()
       
-      console.log('AI Response:', data) // Debug log
+      console.warn('AI Response:', data)
       
       if (data.error) {
         throw new Error(data.error)

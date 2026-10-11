@@ -140,7 +140,6 @@ export default async function OrgTicketDetailPage({ params }) {
   }
 
   const { ticket, messages, assignment, organizationId } = data;
-  // console.log(data, "data");
   const roles = getOrgRoles(assignment, organizationId);
 
   return (

@@ -38,7 +38,7 @@ export default function ReportDefectPage() {
   const [evaluatingAnswer, setEvaluatingAnswer] = useState(false)
   const [hasAIChecked, setHasAIChecked] = useState(false)
   const [aiQuestionsComplete, setAiQuestionsComplete] = useState(false)
-  const [isReAsking, setIsReAsking] = useState(false) // Track if we're re-asking
+  const [, setIsReAsking] = useState(false)
   const MAX_AI_QUESTIONS = 4
   const chatScrollRef = useRef(null)
 

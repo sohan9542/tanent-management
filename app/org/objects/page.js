@@ -50,7 +50,7 @@ export default async function OrgObjectsPage() {
                         Address
                       </th>
                       <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                        Your Organization's Role
+                        Your Organization&apos;s Role
                       </th>
                       {isAdmin && (
                         <th className="relative py-3.5 pl-3 pr-4 sm:pr-6">

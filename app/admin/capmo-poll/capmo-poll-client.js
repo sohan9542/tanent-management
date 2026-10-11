@@ -140,7 +140,7 @@ export default function CapmoPollClient() {
             Setup External Cron (Recommended)
           </h2>
           <p className="mb-4 text-gray-700">
-            Since Vercel Hobby plan doesn't support cron jobs, use a free external
+            Since Vercel Hobby plan doesn&apos;t support cron jobs, use a free external
             cron service:
           </p>
           <div className="bg-gray-50 p-4 rounded mb-4">

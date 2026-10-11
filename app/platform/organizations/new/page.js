@@ -74,7 +74,7 @@ export default function NewOrganizationPage() {
                   required
                 />
                 <p className="mt-2 text-sm text-gray-500">
-                  Organizations don't have fixed types. The same organization can be owner for one object and technical for another.
+                  Organizations don&apos;t have fixed types. The same organization can be owner for one object and technical for another.
                 </p>
               </div>
 

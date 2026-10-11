@@ -143,7 +143,7 @@ export default async function TicketsPage() {
               <div className="text-center py-12">
                 <p className="text-gray-500 mb-4">No tickets yet</p>
                 <p className="text-sm text-gray-400 mb-4">
-                  You haven't reported any defects yet. Click the button below to get started.
+                  You haven&apos;t reported any defects yet. Click the button below to get started.
                 </p>
                 <Link
                   href="/report-defect"

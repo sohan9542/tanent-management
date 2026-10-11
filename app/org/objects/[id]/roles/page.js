@@ -114,7 +114,7 @@ export default function ObjectRolesPage() {
               Assign Users to {object?.name}
             </h2>
             <p className="text-sm text-gray-600 mb-4">
-              Assign organization users to this object with role types. You can only assign roles that match your organization's assignment on this object.
+              Assign organization users to this object with role types. You can only assign roles that match your organization&apos;s assignment on this object.
             </p>
 
             {error && (

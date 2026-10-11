@@ -280,7 +280,7 @@ export default function PlatformUsersPage() {
             <div className="mt-3">
               <h3 className="text-lg font-medium text-gray-900 mb-4">Delete User</h3>
               <p className="text-sm text-gray-500 mb-4">
-                Are you sure you want to delete user "{deleteModal.user?.email}"? This action cannot be undone.
+                Are you sure you want to delete user &quot;{deleteModal.user?.email}&quot;? This action cannot be undone.
               </p>
               <div className="flex justify-end space-x-3">
                 <button

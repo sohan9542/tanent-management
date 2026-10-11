@@ -322,7 +322,7 @@ export default function ObjectDetailPage() {
                 )}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">No assignments configured. Click "Manage Assignments" to set up organizations.</p>
+              <p className="text-sm text-gray-500">No assignments configured. Click &quot;Manage Assignments&quot; to set up organizations.</p>
             )}
           </div>
         </div>

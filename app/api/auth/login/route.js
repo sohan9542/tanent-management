@@ -12,25 +12,27 @@ import {
   recordFailedAttempt,
   clearAttempts,
 } from '@/lib/rate-limit'
-import { validateLogin } from '@/utils/validation'
+import { validateLogin } from '@/lib/utils/validation'
 import { DEMO_TENANT, isDemoTenantCredentials } from '@/lib/demo-config'
 import {
   DEMO_COOKIE,
   createStaticDemoToken,
   demoCookieOptions,
 } from '@/lib/demo-session'
+import { jsonError, readJsonBody } from '@/lib/http'
 
 export async function POST(request) {
   try {
-    const body = await request.json()
+    const body = await readJsonBody(request)
+    if (!body) {
+      return jsonError('Invalid JSON body', { status: 400 })
+    }
+
     const { tenantId, lastName, recaptchaToken } = body
 
     const validation = validateLogin({ tenantId, lastName, recaptchaToken })
     if (!validation.isValid) {
-      return NextResponse.json(
-        { success: false, error: validation.errors[0] },
-        { status: 400 }
-      )
+      return jsonError(validation.errors[0], { status: 400 })
     }
 
     // Static portfolio demo — zero DB / Supabase

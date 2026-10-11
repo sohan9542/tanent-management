@@ -7,6 +7,8 @@ import {
   createStaticDemoToken,
   demoCookieOptions,
 } from '@/lib/demo-session'
+import { jsonError, readJsonBody } from '@/lib/http'
+import { validateEmailPasswordLogin } from '@/lib/utils/validation'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -40,14 +42,15 @@ function staticDemoLoginResponse() {
  */
 export async function POST(request) {
   try {
-    const body = await request.json()
-    const { email, password } = body
+    const body = await readJsonBody(request)
+    if (!body) {
+      return jsonError('Invalid JSON body', { status: 400, successField: false })
+    }
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
-      )
+    const { email, password } = body
+    const validation = validateEmailPasswordLogin({ email, password })
+    if (!validation.isValid) {
+      return jsonError(validation.errors[0], { status: 400, successField: false })
     }
 
     if (isDemoOrgCredentials(email, password)) {
